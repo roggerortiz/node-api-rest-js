@@ -1,0 +1,169 @@
+components:
+   schemas:
+      User:
+         type: object
+         properties:
+            name:
+               type: string
+            username:
+               type: string
+            email:
+               type: string
+            password:
+               type: string
+         required:
+            - name
+            - username
+            - email
+            - password
+         example:
+            name: John Doe
+            username: jdoe
+            email: jdoe@company.com
+            password: 123456
+      UserNotFound:
+         type: object
+         properties:
+            message:
+               type: string
+               description: a message when user was not found
+         example:
+            message: User was not found
+      UserError:
+         type: object
+         properties:
+            message:
+               type: string
+               description: a message when get internal error
+         example:
+            message: Internal error
+   parameters:
+      userId:
+         in: path
+         name: id
+         required: true
+         schema:
+            type: string
+         description: the user id
+
+tags:
+   name: Users
+   description: User endpoint
+
+paths:
+   /api/users:
+      get:
+         summary: Get a users list
+         tags: [Users]
+         responses:
+            200:
+               description: The users list
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: '#/components/schemas/User'
+            500:
+               description: Error on get users list
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserError'
+      post:
+         summary: Create a user
+         tags: [Users]
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: '#/components/schemas/User'
+
+         responses:
+            201:
+               description: The user was created
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/User'
+            500:
+               description: Error on create user
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserError'
+
+   /api/users/{id}:
+      get:
+         summary: Get a user by id
+         tags: [Users]
+         parameters:
+            - $ref: '#/components/parameters/userId'
+         responses:
+            200:
+               description: The user was found
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/User'
+            404:
+               description: The user was not found
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserNotFound'
+            500:
+               description: Error on get user by id
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserError'
+      put:
+         summary: Update a user
+         tags: [Users]
+         parameters:
+            - $ref: '#/components/parameters/userId'
+         responses:
+            200:
+               description: The user was updated
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/User'
+            404:
+               description: The user was not found
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserNotFound'
+            500:
+               description: Error on update user
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserError'
+      delete:
+         summary: Delete a user
+         tags: [Users]
+         parameters:
+            - $ref: '#/components/parameters/userId'
+         responses:
+            204:
+               description: The user was deleted
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/User'
+            404:
+               description: The user was not found
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserNotFound'
+            500:
+               description: Error on delete user
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/UserError'

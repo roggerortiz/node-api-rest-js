@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
 
-const publicPaths = [
+const excludePaths = [
+   '/api/docs',
    '/api/auth/signup',
    '/api/auth/signin'
 ]
 
 export default async (req, res, next) => {
-   if (publicPaths.indexOf(req.url) !== -1)
+   if (req.url === '/' || excludePaths.find(path => req.url.includes(path)))
       return next();
 
    const { authorization } = req.headers;

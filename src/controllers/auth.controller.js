@@ -1,39 +1,72 @@
 import User from '../models/User';
 import { jwtSign } from '../utils';
 
+const messageNotFound = { message: 'User was not found' };
+const messageErrror = { message: 'Internal error' };
+
 export const signUp = async (req, res) => {
-   const { name, username, email, password } = req.body;
-   const encryptedPassword = await User.encryptPassword(password);
+   try {
 
-   const newUser = new User({ name, username, email, password: encryptedPassword });
-   const savedUser = await newUser.save();
+      const { name, username, email, password } = req.body;
+      const encryptedPassword = await User.encryptPassword(password);
 
-   const result = jwtSign(savedUser);
-   res.status(200).json(result);
+      const newUser = new User({ name, username, email, password: encryptedPassword });
+      const savedUser = await newUser.save();
+
+      const result = jwtSign(savedUser);
+      return res.status(200).json(result);
+
+   } catch (error) {
+
+      console.log({ url: req.url, error });
+      return res.status(500).json(messageErrror);
+
+   }
 }
 
 export const signIn = async (req, res) => {
-   const { email, password } = req.body;
-   const foundUser = await User.findOne({ email });
+   try {
 
-   if (!foundUser)
-      return res.status(400).json({ message: "User not found" });
+      const { email, password } = req.body;
+      const foundUser = await User.findOne({ email });
 
-   const isMatchedPassword = await User.comparePassword(password, foundUser.password);
+      if (!foundUser)
+         return res.status(400).json(messageNotFound);
 
-   if (!isMatchedPassword)
-      return res.status(401).json({ message: "Invalid password" });
+      const isMatchedPassword = await User.comparePassword(password, foundUser.password);
 
-   const result = jwtSign(foundUser);
-   res.status(200).json(result);
+      if (!isMatchedPassword)
+         return res.status(401).json({ message: "Invalid password" });
+
+      const result = jwtSign(foundUser);
+      return res.status(200).json(result);
+
+   } catch (error) {
+
+      console.log({ url: req.url, error });
+      return res.status(500).json(messageErrror);
+
+   }
 }
 
 export const refreshToken = async (req, res) => {
-   if (req.user.refreshToken !== req.body.refreshToken)
-      return res.status(401).json({ message: "Invalid refresh token" });
+   try {
 
-   const foundUser = await User.findById(req.user.subs, { password: 0 });
+      if (req.user.refreshToken !== req.body.refreshToken)
+         return res.status(401).json({ message: "Invalid refresh token" });
 
-   const result = jwtSign(foundUser);
-   res.status(200).json(result);
+      const foundUser = await User.findById(req.user.subs, { password: 0 });
+
+      if (!foundUser)
+         return res.status(404).json(messageNotFound);
+
+      const result = jwtSign(foundUser);
+      return res.status(200).json(result);
+
+   } catch (error) {
+
+      console.log({ url: req.url, error });
+      return res.status(500).json(messageErrror);
+
+   }
 }
