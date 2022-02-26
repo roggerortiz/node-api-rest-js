@@ -4,7 +4,6 @@ const messageNotFound = { message: 'User was not found' };
 const messageErrror = { message: 'Internal error' };
 
 export const getUsers = async (req, res) => {
-   // #swagger.tags = ['User']
    try {
 
       const users = await User.find();
@@ -19,7 +18,6 @@ export const getUsers = async (req, res) => {
 }
 
 export const getUserById = async (req, res) => {
-   // #swagger.tags = ['User']
    try {
 
       const foundUser = await User.findById(req.params.id);
@@ -37,7 +35,6 @@ export const getUserById = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-   // #swagger.tags = ['User']
    try {
 
       const { name, username, email, password } = req.body;
@@ -56,7 +53,6 @@ export const createUser = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-   // #swagger.tags = ['User']
    try {
 
       const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -75,7 +71,6 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-   // #swagger.tags = ['User']
    try {
 
       const deletedUser = await User.findByIdAndDelete(req.params.id);

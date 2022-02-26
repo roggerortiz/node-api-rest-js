@@ -5,7 +5,6 @@ const messageNotFound = { message: 'User was not found' };
 const messageErrror = { message: 'Internal error' };
 
 export const signUp = async (req, res) => {
-   // #swagger.tags = ['Auth']
    try {
 
       const { name, username, email, password } = req.body;
@@ -26,14 +25,13 @@ export const signUp = async (req, res) => {
 }
 
 export const signIn = async (req, res) => {
-   // #swagger.tags = ['Auth']
    try {
 
       const { email, password } = req.body;
       const foundUser = await User.findOne({ email });
 
       if (!foundUser)
-         return res.status(400).json(messageNotFound);
+         return res.status(404).json(messageNotFound);
 
       const isMatchedPassword = await User.comparePassword(password, foundUser.password);
 
@@ -52,7 +50,6 @@ export const signIn = async (req, res) => {
 }
 
 export const refreshToken = async (req, res) => {
-   // #swagger.tags = ['Auth']
    try {
 
       if (req.user.refreshToken !== req.body.refreshToken)

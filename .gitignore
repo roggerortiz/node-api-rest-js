@@ -12,7 +12,7 @@
 /build
 
 #rest client
-/rest
+/requests
 
 # misc
 .DS_Store

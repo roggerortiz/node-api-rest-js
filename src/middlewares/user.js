@@ -5,10 +5,10 @@ export default async (req, res, next) => {
 
    const user = await User.findOne().or([{ username }, { email }]);
 
-   if(user?.username === username)
+   if(user && user.username === username)
       return res.status(400).json({message: "Username alredy exists"});
 
-   if(user?.email === email)
+   if(user && user.email === email)
       return res.status(400).json({message: "Email alredy exists"});
 
    return next();

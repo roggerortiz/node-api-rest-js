@@ -2,11 +2,12 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import swaggerUI from 'swagger-ui-express';
+import swaggerOpt from '../../swagger.json';
 import cors from '../middlewares/cors';
 import jwt from '../middlewares/jwt';
-import swaggerOpt from '../../swagger.json';
-import userRouter from '../routes/user.routes';
 import authRouter from '../routes/auth.routes';
+import homeRouter from '../routes/home.routes';
+import userRouter from '../routes/user.routes';
 
 const app = express();
 
@@ -18,12 +19,13 @@ app.use(cors);
 app.use(jwt);
 
 //routes
-app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerOpt));
+app.use('/', homeRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/users', userRouter);
+app.use('/api/user', userRouter);
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerOpt));
 
 export default () => {
    app.listen({ port: process.env.PORT }, () => {
-      console.log(`>> Server listen on http://localhost:${process.env.PORT}/api/docs`);
+      console.log(`>> Server listen on http://localhost:${process.env.PORT}`);
    });
 }

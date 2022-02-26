@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const excludePaths = [
-   '/api/docs',
+   '/docs',
    '/api/auth/signup',
    '/api/auth/signin'
 ]
@@ -16,7 +16,7 @@ export default async (req, res, next) => {
       return res.status(403).json({ message: "No token provided" });
 
    const [label, accessToken] = authorization.split(' ');
-   
+
    if (label !== 'Bearer' || !accessToken)
       return res.status(401).json({ message: "Unauthorized" });
 
