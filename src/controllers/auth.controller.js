@@ -5,6 +5,7 @@ const messageNotFound = { message: 'User was not found' };
 const messageErrror = { message: 'Internal error' };
 
 export const signUp = async (req, res) => {
+   // #swagger.tags = ['Auth']
    try {
 
       const { name, username, email, password } = req.body;
@@ -25,6 +26,7 @@ export const signUp = async (req, res) => {
 }
 
 export const signIn = async (req, res) => {
+   // #swagger.tags = ['Auth']
    try {
 
       const { email, password } = req.body;
@@ -50,6 +52,7 @@ export const signIn = async (req, res) => {
 }
 
 export const refreshToken = async (req, res) => {
+   // #swagger.tags = ['Auth']
    try {
 
       if (req.user.refreshToken !== req.body.refreshToken)
