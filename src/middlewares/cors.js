@@ -7,8 +7,11 @@ const whiteList = [
 const options = {
    origin: (origin, callback) => {
       const isDevelopment = (process.env.NODE_ENV === 'development');
-      if (isDevelopment || whiteList.indexOf(origin) !== -1) callback(null, true);
-      else callback(new Error("Not allowed by CORS"));
+
+      if (!isDevelopment && whiteList.indexOf(origin) === -1)
+         callback(new Error("Not allowed by CORS"));
+
+      callback(null, true);
    },
    optionsSuccessStatus: 200,
 };

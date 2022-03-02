@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import swaggerUI from 'swagger-ui-express';
-import swaggerOpt from '../../swagger.json';
+import swaggerDocs from '../swagger';
 import cors from '../middlewares/cors';
 import jwt from '../middlewares/jwt';
 import authRouter from '../routes/auth.routes';
@@ -22,10 +22,12 @@ app.use(jwt);
 app.use('/', homeRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerOpt));
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
-export default () => {
+const startServer = () => {
    app.listen({ port: process.env.PORT }, () => {
       console.log(`>> Server listen on http://localhost:${process.env.PORT}`);
    });
 }
+
+export default startServer;

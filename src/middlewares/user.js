@@ -1,15 +1,23 @@
 import User from "../models/User";
 
-export default async (req, res, next) => {
-   const { username, email } = req.body;
+const validateUser = async (req, res, next) => {
+   try {
 
-   const user = await User.findOne().or([{ username }, { email }]);
+      const { username, email } = req.body;
 
-   if(user && user.username === username)
-      return res.status(400).json({message: "Username alredy exists"});
+      const user = await User.findOne().or([{ username }, { email }]);
 
-   if(user && user.email === email)
-      return res.status(400).json({message: "Email alredy exists"});
+      if (user && user.username === username)
+         return res.status(400).json({ message: "Username alredy exists" });
 
-   return next();
+      if (user && user.email === email)
+         return res.status(400).json({ message: "Email alredy exists" });
+
+      return next();
+
+   } catch (error) {
+      return res.status(400).json({ message: "Bad Request" });
+   }
 }
+
+export default validateUser;

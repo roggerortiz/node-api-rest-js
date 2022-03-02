@@ -1,7 +1,0 @@
-components:
-   schemas:
-      Result:
-         type: object
-         properties:
-            message:
-               type: string

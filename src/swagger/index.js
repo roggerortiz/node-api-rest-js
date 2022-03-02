@@ -1,6 +1,10 @@
-import generate from "./generate";
+import getTags from "./tags";
+import getPaths from "./paths";
+import getComponents from "./components";
 
-const options = {
+const models = ['user'];
+
+const swaggerDocs = {
    openapi: '3.0.0',
    info: {
       title: "Rest API",
@@ -10,104 +14,10 @@ const options = {
    basePath: "/",
    consumes: ['application/json'],
    produces: ['application/json'],
-   tags: [
-      { "name": "Auth" },
-      { "name": "User" }
-   ],
-   components: {
-      securitySchemes: {
-         bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT"
-         }
-      },
-      schemas: {
-         "SignIn": {
-            type: "object",
-            properties: {
-               email: {
-                  type: "string"
-               },
-               password: {
-                  type: "string"
-               }
-            }
-         },
-         "RefreshToken": {
-            type: "object",
-            properties: {
-               refreshToken: {
-                  type: "string"
-               }
-            }
-         },
-         "SignedIn": {
-            type: "object",
-            properties: {
-               subs: {
-                  type: "string"
-               },
-               name: {
-                  type: "string"
-               },
-               username: {
-                  type: "string"
-               },
-               email: {
-                  type: "string"
-               },
-               accessToken: {
-                  type: "string"
-               },
-               refreshToken: {
-                  type: "string"
-               }
-            }
-         },
-         "Result": {
-            type: "object",
-            properties: {
-               message: {
-                  type: "string"
-               }
-            }
-         },
-         "User": {
-            type: "object",
-            properties: {
-               name: {
-                  type: "string"
-               },
-               username: {
-                  type: "string"
-               },
-               email: {
-                  type: "string"
-               },
-               password: {
-                  type: "string"
-               }
-            },
-            required: [
-               "name",
-               "username",
-               "pasword"
-            ]
-         }
-      },
-      parameters: {
-         authorization: {
-            in: "header",
-            name: "authorization",
-            type: "string"
-         }
-      }
-   },
+   tags: getTags(models),
+   components: getComponents(),
    security: [
-      {
-         bearerAuth: []
-      }
+      { bearerAuth: [] }
    ],
    securityDefinitions: {
       apiKeyAuth: {
@@ -116,11 +26,8 @@ const options = {
          name: "Authorization",
          description: "Json Web Token"
       }
-   }
-}
+   },
+   paths: getPaths(models)
+};
 
-const models = [
-   'user'
-]
-
-generate(options, models);
+export default swaggerDocs;
