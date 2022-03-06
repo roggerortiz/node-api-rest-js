@@ -4,7 +4,10 @@
    "description": "Rest API using express without typescript",
    "main": "index.js",
    "scripts": {
-      "start": "nodemon src/index.js --exec babel-node",
+      "start-docs": "concurrently \"npm run docs\" \"npm run dev\"",
+      "dev": "nodemon src/index.js --exec babel-node",
+      "docs": "babel-node src/swagger/index.js",
+      "start": "babel-node src/index.js",
       "build": "babel src --out-dir dist",
       "serve": "node dist/index.js"
    },
@@ -13,6 +16,7 @@
    "license": "ISC",
    "dependencies": {
       "bcryptjs": "^2.4.3",
+      "concurrently": "^7.0.0",
       "cors": "^2.8.5",
       "dotenv": "^16.0.0",
       "express": "^4.17.3",

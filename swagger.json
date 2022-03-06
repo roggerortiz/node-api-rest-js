@@ -1,0 +1,649 @@
+{
+   "openapi": "3.0.0",
+   "info": {
+      "title": "Rest API",
+      "version": "1.0.0"
+   },
+   "host": "localhost:4000",
+   "basePath": "/",
+   "consumes": [
+      "application/json"
+   ],
+   "produces": [
+      "application/json"
+   ],
+   "tags": [
+      {
+         "name": "Auth"
+      },
+      {
+         "name": "User"
+      }
+   ],
+   "components": {
+      "securitySchemes": {
+         "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+         }
+      },
+      "schemas": {
+         "SignIn": {
+            "type": "object",
+            "properties": {
+               "email": {
+                  "type": "string"
+               },
+               "password": {
+                  "type": "string"
+               }
+            }
+         },
+         "RefreshToken": {
+            "type": "object",
+            "properties": {
+               "refreshToken": {
+                  "type": "string"
+               }
+            }
+         },
+         "SignedIn": {
+            "type": "object",
+            "properties": {
+               "subs": {
+                  "type": "string"
+               },
+               "name": {
+                  "type": "string"
+               },
+               "username": {
+                  "type": "string"
+               },
+               "email": {
+                  "type": "string"
+               },
+               "accessToken": {
+                  "type": "string"
+               },
+               "refreshToken": {
+                  "type": "string"
+               }
+            }
+         },
+         "Result": {
+            "type": "object",
+            "properties": {
+               "message": {
+                  "type": "string"
+               }
+            }
+         },
+         "User": {
+            "type": "object",
+            "properties": {
+               "name": {
+                  "type": "string"
+               },
+               "username": {
+                  "type": "string"
+               },
+               "email": {
+                  "type": "string"
+               },
+               "password": {
+                  "type": "string"
+               }
+            },
+            "required": [
+               "name",
+               "username",
+               "pasword"
+            ]
+         }
+      },
+      "parameters": {
+         "authorization": {
+            "in": "header",
+            "name": "authorization",
+            "type": "string"
+         }
+      }
+   },
+   "security": [
+      {
+         "bearerAuth": []
+      }
+   ],
+   "securityDefinitions": {
+      "apiKeyAuth": {
+         "type": "http",
+         "in": "header",
+         "name": "Authorization",
+         "description": "Json Web Token"
+      }
+   },
+   "paths": {
+      "/api/auth/signup": {
+         "post": {
+            "tags": [
+               "Auth"
+            ],
+            "security": [],
+            "requestBody": {
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/User"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "Success",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/SignedIn"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Bad Request",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/auth/signin": {
+         "post": {
+            "tags": [
+               "Auth"
+            ],
+            "requestBody": {
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/SignIn"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "Success",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/SignedIn"
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "Not Found",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/auth/refreshToken": {
+         "post": {
+            "tags": [
+               "Auth"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               }
+            ],
+            "requestBody": {
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/RefreshToken"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "Success",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/SignedIn"
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "Not Found",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/user": {
+         "get": {
+            "tags": [
+               "User"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "Success",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "array",
+                           "items": {
+                              "$ref": "#/components/schemas/User"
+                           }
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "post": {
+            "tags": [
+               "User"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               }
+            ],
+            "requestBody": {
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/User"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "201": {
+                  "description": "Created",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/User"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Bad Request",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/user/:id": {
+         "get": {
+            "tags": [
+               "User"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               },
+               {
+                  "in": "path",
+                  "name": "id",
+                  "type": "string",
+                  "required": true
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "Success",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/User"
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "Not Found",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "put": {
+            "tags": [
+               "User"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               },
+               {
+                  "in": "path",
+                  "name": "id",
+                  "type": "string",
+                  "required": true
+               }
+            ],
+            "requestBody": {
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/User"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "Updated",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/User"
+                        }
+                     }
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "Not Found",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "delete": {
+            "tags": [
+               "User"
+            ],
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/authorization"
+               },
+               {
+                  "in": "path",
+                  "name": "id",
+                  "type": "string",
+                  "required": true
+               }
+            ],
+            "responses": {
+               "204": {
+                  "description": "Not Content"
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "403": {
+                  "description": "Forbidden",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "Not Found",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Result"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
