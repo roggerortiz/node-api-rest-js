@@ -1,0 +1,40 @@
+@contentType = application/json
+@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJzIjoiNjIxYTBiYmZkZjJiZTc3YTE4MjgxN2M5IiwibmFtZSI6Ikp1YW4gUGVyZXoiLCJ1c2VybmFtZSI6ImpwZXJleiIsImVtYWlsIjoianBlcmV6QGdtYWlsLmNvbSIsInJlZnJlc2hUb2tlbiI6IjMzNjQyODA5NDI1NDRlZGY4MmIxOGUwZWM4MjFkYzg1IiwiaWF0IjoxNjQ1ODc0MTExLCJleHAiOjE2NDU5NjA1MTF9.lT2n7sjwCnejTReMntUi0HOJT47wp11RLm8WjjERPIE
+
+###
+
+GET http://localhost:4000/api/user HTTP/1.1
+Authorization: {{authorization}}
+
+###
+
+GET http://localhost:4000/api/user/6212ca2a39d53f90f2a53d1d HTTP/1.1
+
+###
+
+POST http://localhost:4000/api/user HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name": "Juan Perez",
+    "username": "jperez",
+    "email": "jperez@gmail.com",
+    "password": "123456"
+}
+
+###
+
+PUT  http://localhost:4000/api/user/62244a0da8b7030424c1ab6d HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name": "Juan Perez C.",
+    "username": "jperez",
+    "email": "jperez@gmail.com",
+    "password": "123456"
+}
+
+###
+
+DELETE   http://localhost:4000/api/user/6224474ea8b7030424c1ab47 HTTP/1.1
+Content-Type: {{contentType}}
