@@ -13,6 +13,6 @@ export const jwtSign = (user) => {
 
    const payload = { subs: _id, name, username, email, refreshToken };
    const accessToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: 86400 });
-   
+
    return { ...payload, accessToken };
 }

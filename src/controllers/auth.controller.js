@@ -1,8 +1,5 @@
 import User from '../models/User';
-import { jwtSign } from '../utils';
-
-const messageNotFound = { message: 'User was not found' };
-const messageErrror = { message: 'Internal error' };
+import { messageError, internalError, notFound, success } from '../utils/responses';
 
 export const signUp = async (req, res) => {
    try {
@@ -14,12 +11,12 @@ export const signUp = async (req, res) => {
       const savedUser = await newUser.save();
 
       const result = jwtSign(savedUser);
-      return res.status(200).json(result);
+      return res.status(200).json(success(result));
 
    } catch (error) {
 
       console.log({ url: req.url, error });
-      return res.status(500).json(messageErrror);
+      return res.status(500).json(internalError());
 
    }
 }
@@ -31,20 +28,20 @@ export const signIn = async (req, res) => {
       const foundUser = await User.findOne({ email });
 
       if (!foundUser)
-         return res.status(404).json(messageNotFound);
+         return res.status(404).json(notFound('User'));
 
       const isMatchedPassword = await User.comparePassword(password, foundUser.password);
 
       if (!isMatchedPassword)
-         return res.status(401).json({ message: "Invalid password" });
+         return res.status(401).json(messageError("Invalid password"));
 
       const result = jwtSign(foundUser);
-      return res.status(200).json(result);
+      return res.status(200).json(success(result));
 
    } catch (error) {
 
       console.log({ url: req.url, error });
-      return res.status(500).json(messageErrror);
+      return res.status(500).json(internalError());
 
    }
 }
@@ -53,20 +50,20 @@ export const refreshToken = async (req, res) => {
    try {
 
       if (req.user.refreshToken !== req.body.refreshToken)
-         return res.status(401).json({ message: "Invalid refresh token" });
+         return res.status(401).json(messageError("Invalid refresh token"));
 
       const foundUser = await User.findById(req.user.subs, { password: 0 });
 
       if (!foundUser)
-         return res.status(404).json(messageNotFound);
+         return res.status(404).json(notFound('User'));
 
       const result = jwtSign(foundUser);
-      return res.status(200).json(result);
+      return res.status(200).json(success(result));
 
    } catch (error) {
 
       console.log({ url: req.url, error });
-      return res.status(500).json(messageErrror);
+      return res.status(500).json(internalError());
 
    }
 }
